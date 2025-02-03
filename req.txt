@@ -10,3 +10,4 @@ typing_extensions==4.9.0
 python-dotenv 
 drf-yasg
 environ
+django-cors-headers

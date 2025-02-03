@@ -31,8 +31,11 @@ SECRET_KEY = 'django-insecure-3maz%o7e(ntfkpe3kwne-i1)x!^t@nz-#f-h@=gh8ke#-+*duu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('ALLOW_HOSTS', '127.0.0.1').split(',')
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '87.255.198.245',
+    'oyster-app-auigo.ondigitalocean.app'
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'restaurant',
     'administrator',
+    'corsheaders',
 ]
 
 AVATARIYA_BASE_URL = os.getenv('AVATARIYA_BASE_URL', 'http://127.0.0.1:7654')
@@ -64,6 +68,7 @@ from_1c_password = os.getenv('FROM_1C_PASSWORD')
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
