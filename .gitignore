@@ -1,0 +1,4 @@
+.env
+run_project.bat
+db.sqlite3
+media/
