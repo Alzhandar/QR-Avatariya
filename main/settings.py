@@ -26,17 +26,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-3maz%o7e(ntfkpe3kwne-i1)x!^t@nz-#f-h@=gh8ke#-+*duu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
-
 DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '87.255.198.245',
-    'https://whale-app-iepuq.ondigitalocean.app/',
+    'whale-app-iepuq.ondigitalocean.app/',
     '0.0.0.0',
 ]
 # Application definition
@@ -105,11 +104,17 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'defaultdb'),
+        'USER': os.getenv('DB_USER', 'doadmin'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT', '25060'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -165,8 +170,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://whale-app-iepuq.ondigitalocean.app/',
-    'http://whale-app-iepuq.ondigitalocean.app/',
+    'https://oyster-app-auigo.ondigitalocean.app',
+    'http://oyster-app-auigo.ondigitalocean.app',
     'http://87.255.198.245',
     'http://localhost:7654',
 ]
@@ -174,10 +179,3 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
-
-SESSION_COOKIE_DOMAIN = "whale-app-iepuq.ondigitalocean.app"
-SESSION_COOKIE_SECURE = True            # Если есть HTTPS
-CSRF_COOKIE_SECURE = True               # Если есть HTTPS
-SESSION_COOKIE_AGE = 1209600            # 2 недели
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False

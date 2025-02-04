@@ -6,9 +6,15 @@ services:
              python manage.py runserver 0.0.0.0:7654"
     volumes:
       - .:/usr/src/app
-      - sqlite_data:/usr/src/app/db
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     ports:
       - '7654:7654'
+    env_file:
+      - .env
+
 
 volumes:
-  sqlite_data:
+  postgres_data:
+  static_volume:
+  media_volume:
