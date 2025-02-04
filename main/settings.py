@@ -36,7 +36,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '87.255.198.245',
-    'oyster-app-auigo.ondigitalocean.app',
+    'https://whale-app-iepuq.ondigitalocean.app/',
     '0.0.0.0',
 ]
 # Application definition
@@ -165,8 +165,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://oyster-app-auigo.ondigitalocean.app',
-    'http://oyster-app-auigo.ondigitalocean.app',
+    'https://whale-app-iepuq.ondigitalocean.app/',
+    'http://whale-app-iepuq.ondigitalocean.app/',
     'http://87.255.198.245',
     'http://localhost:7654',
 ]
@@ -174,3 +174,10 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
+
+SESSION_COOKIE_DOMAIN = "whale-app-iepuq.ondigitalocean.app"
+SESSION_COOKIE_SECURE = True            # Если есть HTTPS
+CSRF_COOKIE_SECURE = True               # Если есть HTTPS
+SESSION_COOKIE_AGE = 1209600            # 2 недели
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
