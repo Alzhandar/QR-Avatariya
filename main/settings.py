@@ -26,7 +26,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3maz%o7e(ntfkpe3kwne-i1)x!^t@nz-#f-h@=gh8ke#-+*duu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,7 +34,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '87.255.198.245',
-    'whale-app-iepuq.ondigitalocean.app/',
+    'whale-app-iepuq.ondigitalocean.app',
     '0.0.0.0',
 ]
 # Application definition
@@ -170,8 +169,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://oyster-app-auigo.ondigitalocean.app',
-    'http://oyster-app-auigo.ondigitalocean.app',
+    'https://whale-app-iepuq.ondigitalocean.app',
+    'http://whale-app-iepuq.ondigitalocean.app',
     'http://87.255.198.245',
     'http://localhost:7654',
 ]
