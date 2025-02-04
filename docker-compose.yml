@@ -2,12 +2,11 @@ services:
   web:
     build: .
     command: >
-      sh -c "python manage.py makemigrations &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:7654"
     volumes:
       - .:/usr/src/app
-      - sqlite_data:/usr/src/app/db.sqlite3  
+      - sqlite_data:/usr/src/app/db
     ports:
       - '7654:7654'
 
