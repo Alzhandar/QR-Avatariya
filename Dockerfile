@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 7654
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:7654", "--insecure"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:7654"]
