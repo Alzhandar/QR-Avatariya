@@ -168,7 +168,9 @@ CSRF_TRUSTED_ORIGINS = [
     'https://oyster-app-auigo.ondigitalocean.app',
     'http://oyster-app-auigo.ondigitalocean.app',
     'http://87.255.198.245',
+    'http://localhost:7654',
 ]
 
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
