@@ -85,16 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
-# -----------------------------------------------------------------------------
-# База данных
-# -----------------------------------------------------------------------------
-# Если на DigitalOcean App Platform или другом сервисе у вас эпhemeral storage,
-# используйте внешнюю БД (например, PostgreSQL). Ниже пример для PostgreSQL.
 
-# Если хотите остаться на SQLite и уверены, что данные не будут потеряны, можете
-# оставить всё как есть.
-
-# Пример для PostgreSQL:
 """
 DATABASES = {
     'default': {
@@ -108,7 +99,6 @@ DATABASES = {
 }
 """
 
-# Если пока используете SQLite (и она не сбрасывается), оставьте:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -149,12 +139,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-SESSION_COOKIE_AGE = 1209600               # 2 недели
-SESSION_SAVE_EVERY_REQUEST = True          # Обновлять cookie при каждом запросе
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# SESSION_COOKIE_AGE = 1209600               # 2 недели
+# SESSION_SAVE_EVERY_REQUEST = True      
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-SESSION_COOKIE_SECURE = not DEBUG          # Включается если сайт на HTTPS
-CSRF_COOKIE_SECURE = not DEBUG
+# SESSION_COOKIE_SECURE = not DEBUG        
+# CSRF_COOKIE_SECURE = not DEBUG
 
 # Если надо:
 # SESSION_COOKIE_DOMAIN = '.oyster-app-auigo.ondigitalocean.app'
