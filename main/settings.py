@@ -51,23 +51,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'storages'
 ]
-# DigitalOcean Spaces настройки
-AWS_ACCESS_KEY_ID = os.getenv('DO_SPACES_KEY')
-AWS_SECRET_ACCESS_KEY = os.getenv('DO_SPACES_SECRET')
-AWS_STORAGE_BUCKET_NAME = os.getenv('DO_SPACES_BUCKET')
-AWS_S3_ENDPOINT_URL = os.getenv('DO_SPACES_ENDPOINT')
-AWS_S3_REGION_NAME = os.getenv('DO_SPACES_REGION')
-AWS_DEFAULT_ACL = 'public-read'
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
 
-# Настройки для статических и медиа файлов
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-# Дополнительные параметры
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
 
 AVATARIYA_BASE_URL = os.getenv('AVATARIYA_BASE_URL')
 address_for_qr = AVATARIYA_BASE_URL
