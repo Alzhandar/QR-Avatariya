@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="table-info">
+        <h1>Стол №{{ table.number }}</h1>
+        {% if table.section %}
+            <h2>Секция: {{ table.section.name }}</h2>
+            <h3>Ресторан: {{ table.section.restaurant.name }}</h3>
+        {% endif %}
+    </div>
+    
+    <div class="actions">
+        <button id="callWaiter" class="btn btn-primary">Вызвать официанта</button>
+        <button id="requestBill" class="btn btn-secondary">Запросить счёт</button>
+    </div>
+</div>
+{% endblock %}

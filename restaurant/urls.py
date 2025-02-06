@@ -9,4 +9,5 @@ router.register(r'restaurants', views.RestaurantViewSet, basename='restaurant')
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('<uuid:uuid>/',views.TableDetailView.as_view(), name='table_detail')
 ]

@@ -6,6 +6,8 @@ from drf_yasg.utils import swagger_auto_schema
 from .models import Table, Section
 from .serializers import TableSerializer, SectionSerializer, RestaurantSerializer
 import uuid
+from django.views.generic import DetailView
+from django.shortcuts import get_object_or_404, render
 
 class SectionViewSet(viewsets.ModelViewSet):
     queryset = Section.objects.all()
@@ -66,3 +68,10 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
+class TableDetailView(DetailView):
+    model = Table
+    template_name = 'restaurant/table_detail.html'
+    context_object_name = 'table'
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(Table, uuid=self.kwargs.get('uuid'))
