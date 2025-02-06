@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+address_for_qr = 'http://87.255.198.245:7654'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-AVATARIYA_BASE_URL = os.getenv('AVATARIYA_BASE_URL', 'http://127.0.0.1:7654')
+AVATARIYA_BASE_URL = os.getenv('AVATARIYA_BASE_URL')
 address_for_qr = AVATARIYA_BASE_URL
 allow_hosts = os.getenv('ALLOW_HOSTS').split(',')
 hosts = os.getenv('HOSTS').split(',')
