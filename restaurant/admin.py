@@ -39,24 +39,9 @@ class TableInline(admin.TabularInline):
     readonly_fields = ['qr_preview']
     fields = ['number', 'qr_preview']
 
-    class Media:
-        css = {
-            'all': [
-                'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'
-            ]
-        }
-        js = ['admin/js/qr_loader.js']
-
     def qr_preview(self, obj):
         if obj and obj.qr:
-            return format_html('''
-                <div class="qr-container" data-qr-url="{}">
-                    <img src="{}" width="70" height="70" class="qr-image" style="display: none;"/>
-                    <div class="qr-loader" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-spinner fa-spin fa-2x"></i>
-                    </div>
-                </div>
-            ''', obj.qr.url, obj.qr.url)
+            return format_html('<img src="{}" width="70" height="70"/>', obj.qr.url)
         return "QR код будет создан после сохранения"
     qr_preview.short_description = 'Предпросмотр'
 
