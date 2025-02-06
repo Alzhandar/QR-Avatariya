@@ -106,7 +106,7 @@ class Table(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.qr:
-            link = f"{settings.address_for_qr}/{self.uuid}/" 
+            link = f"{settings.AVATARIYA_BASE_URL}/{self.uuid}/" 
             code_img = qrcode.make(link)
             canvas = Image.new('RGB', (410, 410), 'white')
             canvas.paste(code_img)
