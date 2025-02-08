@@ -20,6 +20,46 @@ document.addEventListener('DOMContentLoaded', function() {
         delay: 1,
         ease: 'power3.out'
     });
+    gsap.to('.mascot-image', {
+        y: -10,
+        rotation: 2,
+        duration: 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "power1.inOut"
+    });
+
+    // Остальные анимации
+    gsap.from('.header', {
+        duration: 1,
+        y: -50,
+        opacity: 0,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.welcome-message', {
+        duration: 1,
+        opacity: 0,
+        delay: 0.3,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.menu-item', {
+        duration: 0.8,
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        ease: 'power3.out'
+    });
+
+    gsap.from('.social-link', {
+        duration: 0.5,
+        x: 30,
+        opacity: 0,
+        stagger: 0.1,
+        delay: 1,
+        ease: 'power3.out'
+    });
 
     const buttons = document.querySelectorAll('.ripple-effect');
     

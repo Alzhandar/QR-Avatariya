@@ -3,7 +3,8 @@
 
 {% block content %}
 <div class="header animate__animated animate__fadeIn">
-    <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse">
+    <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse">   
+    <!-- <h1 class="brand-name text-gradient">Avatariya</h1> -->
 </div>
 
 <div class="welcome-message animate__animated animate__fadeInUp">
@@ -39,19 +40,19 @@
     </div>
 </div>
 
-<footer class="footer">
+<footer class="footer animate__animated animate__fadeInUp">
     <div class="mascot">
-        <img src="{% static 'img/mascot.png' %}" alt="Талисман" class="mascot-image">
+        <img src="{% static 'img/animal_avatariya.png' %}" alt="Талисман Avatariya" class="mascot-image">
     </div>
     <div class="social-links">
         <a href="#" class="social-link">
-            <img src="{% static 'img/instagram.png' %}" alt="Instagram">
+            <img src="{% static 'img/whatsapp.png' %}" alt="WhatsApp">
         </a>
         <a href="#" class="social-link">
-            <img src="{% static 'img/telegram.png' %}" alt="Telegram">
+            <img src="{% static 'svg/instagram.svg' %}" alt="Instagram">
         </a>
-        <a href="#" class="social-link">
-            <img src="{% static 'img/website.png' %}" alt="Website" class="website-icon">
+        <a href="https://avatariya.com/" class="social-link">
+            <img src="{% static 'img/website.png' %}" alt="Facebook" class="website-icon">
         </a>
     </div>
 </footer>
