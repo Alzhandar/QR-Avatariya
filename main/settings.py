@@ -82,7 +82,7 @@ whatsapp = os.getenv('WHATSAPP_URL')
 menu_kz = os.getenv('MENU_KZ_URL')
 menu_ru = os.getenv('MENU_RU_URL')
 pay = ''
-
+FEEDBACK = os.getenv('FEEDBACK')
 from_1c_server = os.getenv('FROM_1C_SERVER')
 from_1c_username = os.getenv('FROM_1C_USERNAME')
 from_1c_password = os.getenv('FROM_1C_PASSWORD')

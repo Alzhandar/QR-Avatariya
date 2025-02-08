@@ -60,7 +60,21 @@ document.addEventListener('DOMContentLoaded', function() {
         delay: 1,
         ease: 'power3.out'
     });
+    gsap.from('.menu-choice-wrapper', {
+        duration: 0.8,
+        opacity: 0,
+        y: 30,
+        ease: 'power3.out'
+    });
 
+    gsap.from('.menu-lang-btn', {
+        duration: 0.5,
+        opacity: 0,
+        y: 20,
+        stagger: 0.1,
+        delay: 0.3,
+        ease: 'power3.out'
+    });
     const buttons = document.querySelectorAll('.ripple-effect');
     
     buttons.forEach(button => {
@@ -76,6 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
             this.appendChild(ripple);
 
             setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    const menuButtons = document.querySelectorAll('.menu-lang-btn');
+    
+    menuButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 150);
         });
     });
 });

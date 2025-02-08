@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="menu-choice-wrapper animate__animated animate__fadeIn">
+    <div class="menu-choice-header">
+        <h2>Выберите язык меню</h2>
+        <p>Таңдаңыз мәзір тілі</p>
+    </div>
+    
+    <div class="menu-language-buttons">
+        <a href="{{ menu_ru }}" class="menu-lang-btn" target="_blank">
+            <span class="lang-icon">🇷🇺</span>
+            <span class="lang-text">Русский</span>
+        </a>
+        <a href="{{ menu_kz }}" class="menu-lang-btn" target="_blank">
+            <span class="lang-icon">🇰🇿</span>
+            <span class="lang-text">Қазақша</span>
+        </a>
+    </div>
+    
+    <button class="back-btn" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Назад
+    </button>
+</div>
+{% endblock %}

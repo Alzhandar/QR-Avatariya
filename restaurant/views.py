@@ -8,6 +8,7 @@ from .serializers import TableSerializer, SectionSerializer, RestaurantSerialize
 import uuid
 from django.views.generic import DetailView
 from django.shortcuts import get_object_or_404, render
+import os
 
 class SectionViewSet(viewsets.ModelViewSet):
     queryset = Section.objects.all()
@@ -56,7 +57,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         operation_description="Получить список всех ресторанов",
         responses={200: RestaurantSerializer(many=True)}
-        
+
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -71,9 +72,35 @@ class RestaurantViewSet(viewsets.ModelViewSet):
 
 class TableDetailView(DetailView):
     model = Table
-    template_name = 'restaurant/table_detail.html'
+    template_name = 'restaurant/main.html'
     context_object_name = 'table'
+    slug_field = 'uuid' 
+    slug_url_kwarg = 'uuid'  
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(Table, uuid=self.kwargs.get('uuid'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        table = self.get_object()
+        context.update({
+            'whatsapp_url': os.getenv('WHATSAPP_URL'),
+            'instagram_url': os.getenv('INSTAGRAM_URL'),
+            'FeedbackForm': os.getenv('FEEDBACK'),
+            'restaurant_name': table.section.restaurant.name if table.section else "Avatariya",
+            'section_name': table.section.name if table.section else "Основной зал",
+            'table_number': table.number
+        })
+        return context
     
+class MenuChoiceView(DetailView):
+    model = Table
+    template_name = 'restaurant/menu.html'
+    context_object_name = 'table'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'menu_ru': os.getenv('MENU_RU_URL'),
+            'menu_kz': os.getenv('MENU_KZ_URL')
+        })
+        return context
