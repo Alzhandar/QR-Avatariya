@@ -490,16 +490,16 @@ body {
     }
 
     .mascot-image {
-        max-width: 120px;
+        max-width: 200px;
     }
 
     .social-link img {
-        width: 30px;
-        height: 30px;
+        width: 60px;
+        height: 60px;
     }
     .social-link img.website-icon {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
     }
 }
 
