@@ -56,6 +56,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         operation_description="Получить список всех ресторанов",
         responses={200: RestaurantSerializer(many=True)}
+        
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -75,3 +76,4 @@ class TableDetailView(DetailView):
     
     def get_object(self, queryset=None):
         return get_object_or_404(Table, uuid=self.kwargs.get('uuid'))
+    

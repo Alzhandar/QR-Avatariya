@@ -1,19 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 style="margin-left: 45%;"";">Avatariya</h1>
+<div class="header">
+    <img src="/static/img/logo.png" alt="Логотип" class="logo">
+    <h1 class="brand-name">Avatariya</h1>
+</div>
+
+<div class="welcome-banner">
+    <div class="overlay"></div>
+    <h1>Добро пожаловать в ресторан Avatariya</h1>
+</div>
+
 <div class="container">
-    <div class="table-info">
-        <h1>Стол №{{ table.number }}</h1>
-        {% if table.section %}
-            <h2>Секция: {{ table.section.name }}</h2>
-            <h3>Ресторан: {{ table.section.restaurant.name }}</h3>
-        {% endif %}
-    </div>
-    
-    <div class="actions">
-        <button id="callWaiter" class="btn btn-primary">Вызвать официанта</button>
-        <button id="requestBill" class="btn btn-secondary">Запросить счёт</button>
+    <div class="table-info-card">
+        <div class="table-header">
+            <h2 class="table-number">Стол №{{ table.number }}</h2>
+            {% if table.section %}
+                <div class="section-info">
+                    <span class="section-name">Секция: {{ table.section.name }}</span>
+                    <span class="restaurant-name">{{ table.section.restaurant.name }}</span>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="actions">
+            <button id="callWaiter" class="btn btn-primary action-btn">
+                <i class="fas fa-bell"></i>
+                Вызвать официанта
+            </button>
+            <button id="requestBill" class="btn btn-secondary action-btn">
+                <i class="fas fa-receipt"></i>
+                Запросить счёт
+            </button>
+            <button id="leaveTable" class="btn btn-danger action-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Покинуть стол
+            </button>
+        </div>
     </div>
 </div>
 {% endblock %}
