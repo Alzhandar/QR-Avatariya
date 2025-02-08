@@ -8,7 +8,6 @@
     --gradient: linear-gradient(45deg, var(--primary-color), var(--primary-light));
 }
 
-/* Глобальные стили */
 body {
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -21,7 +20,6 @@ body {
     min-height: 100vh;
 }
 
-/* Эффект стекла */
 .glass-effect {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -29,7 +27,6 @@ body {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
-/* Текстовый градиент */
 .text-gradient {
     background: var(--gradient);
     -webkit-background-clip: text;
@@ -37,7 +34,6 @@ body {
     background-clip: text;
 }
 
-/* Анимация пульсации */
 .pulse {
     animation: pulse 2s infinite;
 }
@@ -54,7 +50,6 @@ body {
     }
 }
 
-/* Шапка */
 .header {
     text-align: center;
     padding: 20px 0;
@@ -81,7 +76,6 @@ body {
     letter-spacing: 2px;
 }
 
-/* Баннер */
 .welcome-banner {
     position: relative;
     background-image: url('/static/img/restaurant-bg.jpg');
@@ -116,7 +110,6 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Карточка информации */
 .table-info-card {
     border-radius: 20px;
     padding: 30px;
@@ -128,7 +121,6 @@ body {
     transform: translateY(-5px);
 }
 
-/* Кнопки */
 .action-btn {
     padding: 15px 25px;
     font-size: 1.1rem;
@@ -140,7 +132,6 @@ body {
     overflow: hidden;
 }
 
-/* Эффект волны */
 .ripple-effect {
     position: relative;
     overflow: hidden;
@@ -164,7 +155,6 @@ body {
     opacity: 0;
 }
 
-/* Анимация иконок */
 .animated-icon {
     transition: transform 0.3s ease;
     margin-right: 8px;
@@ -174,7 +164,6 @@ body {
     transform: scale(1.2);
 }
 
-/* Градиентные кнопки */
 .btn-primary {
     background: var(--gradient);
     box-shadow: 0 4px 15px rgba(120, 12, 219, 0.2);
@@ -205,7 +194,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Анимации */
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
@@ -218,7 +206,6 @@ body {
     }
 }
 
-/* Медиа запросы */
 @media (max-width: 768px) {
     .brand-name {
         font-size: 2rem;
@@ -385,17 +372,19 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Подвал */
 .footer {
     background: var(--footer-bg);
     padding: 2.5rem 1rem;
     margin-top: auto;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.05);
 }
 
 .mascot {
-    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
+    width: 70%;
     position: relative;
 }
 
@@ -412,14 +401,28 @@ body {
 }
 
 .mascot-image {
-    max-width: 150px;
+    /* max-width: 150px; */
+    width: 100%;
     height: auto;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-    transition: transform 0.3s ease;
+    /* transition: transform 0.3s ease; */
+    animation: float 3s ease-in-out infinite;   
 }
 
 .mascot-image:hover {
     transform: translateY(-5px);
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 .social-links {
@@ -498,8 +501,8 @@ body {
         height: 60px;
     }
     .social-link img.website-icon {
-        width: 80px;
-        height: 80px;
+        width: 75px;
+        height: 75px;
     }
 }
 
