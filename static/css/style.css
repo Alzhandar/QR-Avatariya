@@ -808,19 +808,3 @@ body {
     }
 }
 
-/* Добавьте эти стили для улучшенной анимации логотипа */
-.logo.pulse {
-    animation: logoPulse 2s infinite;
-}
-
-@keyframes logoPulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05) rotate(2deg);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
