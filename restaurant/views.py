@@ -6,10 +6,12 @@ from drf_yasg.utils import swagger_auto_schema
 from .models import Table, Section
 from .serializers import TableSerializer, SectionSerializer, RestaurantSerializer
 import uuid
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
 from django.shortcuts import get_object_or_404, render
 import os
 from django.http import Http404
+from django.utils import timezone
+
 
 class SectionViewSet(viewsets.ModelViewSet):
     queryset = Section.objects.all()
@@ -107,37 +109,45 @@ class MenuChoiceView(DetailView):
         return context
     
 
-def csrf_failure(request, reason=""):
-    context = {
-        'error_message': 'Ошибка проверки CSRF токена. Пожалуйста, попробуйте снова.',
-        'status_code': 403,
-        'reason': reason
-    }
+class CSRFFailureView(View):
+    template_name = 'restaurant/404_error.html'
     
-    return render(
-        request=request,
-        template_name='restaurant/404_error.html',
-        context=context,
-        status=403
-    )
-
-def handler404(request, exception=None):
-    context = {
-        'error_message': str(exception) if exception else 'Запрашиваемая страница не найдена',
-        'status_code': 404,
-    }
+    def get(self, request, reason=""):
+        context = {
+            'error_message': 'Ошибка проверки CSRF токена. Пожалуйста, попробуйте снова.',
+            'status_code': 403,
+            'reason': reason
+        }
+        return render(
+            request=request,
+            template_name=self.template_name,
+            context=context,
+            status=403
+        )
     
-    return render(
-        request=request,
-        template_name='restaurant/404_error.html',
-        context=context,
-        status=404
-    )
+    def post(self, request, reason=""):
+        return self.get(request, reason)
 
-# ...existing code...
 
-from django.utils import timezone
-from django.views.generic import DetailView
+class Error404View(View):
+    template_name = 'restaurant/404_error.html'
+    
+    def get(self, request, exception=None):
+        context = {
+            'error_message': str(exception) if exception else 'Запрашиваемая страница не найдена',
+            'status_code': 404,
+        }
+        return render(
+            request=request,
+            template_name=self.template_name,
+            context=context,
+            status=404
+        )
+    
+    def post(self, request, exception=None):
+        return self.get(request, exception)
+
+
 
 class PredCheckView(DetailView):
     model = Table
@@ -150,8 +160,6 @@ class PredCheckView(DetailView):
         context = super().get_context_data(**kwargs)
         table = self.get_object()
         
-        # Здесь будет ваша логика получения данных о заказе
-        # Это пример данных, замените на реальную логику
         context.update({
             'table': table.number,
             'hall': table.section.name if table.section else "Основной зал",

@@ -10,7 +10,7 @@ router.register(r'tables', views.TableViewSet, basename='table')
 router.register(r'sections', views.SectionViewSet, basename='section')
 router.register(r'restaurants', views.RestaurantViewSet, basename='restaurant')
 
-handler404 = 'restaurant.views.handler404'
+# handler404 = 'restaurant.views.handler404'
 
 urlpatterns = [
     path('api/', include(router.urls)),
