@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="header animate__animated animate__fadeIn">
+    <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse">
+</div>
+
+<div class="bill-container animate__animated animate__fadeInUp">
+    <div class="bill-card glass-effect">
+        <h2 class="bill-title">Ваш текущий счет</h2>
+        
+        <div class="bill-info">
+            <div class="bill-row">
+                <span class="bill-label">Номер стола:</span>
+                <span class="bill-value">{{ table }}</span>
+            </div>
+            <div class="bill-row">
+                <span class="bill-label">Зал:</span>
+                <span class="bill-value">{{ hall }}</span>
+            </div>
+            <div class="bill-row">
+                <span class="bill-label">Номер заказа:</span>
+                <span class="bill-value">{{ num_zakaz }}</span>
+            </div>
+            <div class="bill-row">
+                <span class="bill-label">Дата:</span>
+                <span class="bill-value">{{ date|date:"H:i d.m.Y" }}</span>
+            </div>
+        </div>
+        
+        <div class="bill-total">
+            <span class="total-label">Итого к оплате:</span>
+            <span class="total-value">{{ total }} ₸</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

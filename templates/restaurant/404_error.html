@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content glass-effect">
+        <img src="{% static 'img/404_error.png' %}" alt="404 Error" class="error-image">
+        <h1 class="error-title">Упс! Страница не найдена</h1>
+        <p class="error-message">Похоже, что-то пошло не так. Страница, которую вы ищете, не существует или была перемещена.</p>
+        <a href="{% url 'home' %}" class="error-button">
+            <i class="fas fa-home"></i>
+            Вернуться на главную
+        </a>
+    </div>
+</div>
+{% endblock %}

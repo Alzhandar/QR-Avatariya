@@ -10,10 +10,13 @@ router.register(r'tables', views.TableViewSet, basename='table')
 router.register(r'sections', views.SectionViewSet, basename='section')
 router.register(r'restaurants', views.RestaurantViewSet, basename='restaurant')
 
+handler404 = 'restaurant.views.handler404'
+
 urlpatterns = [
     path('api/', include(router.urls)),
     path('<uuid:uuid>/', TableDetailView.as_view(), name='table_detail'),
     path('<uuid:uuid>/menu/', MenuChoiceView.as_view(), name='menu_choice'),
+    path('<uuid:uuid>/check/', PredCheckView.as_view(), name='pred_check'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

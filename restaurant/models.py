@@ -106,10 +106,27 @@ class Table(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.qr:
-            link = f"{settings.AVATARIYA_BASE_URL}/{self.uuid}/" 
-            code_img = qrcode.make(link)
-            canvas = Image.new('RGB', (410, 410), 'white')
-            canvas.paste(code_img)
+            link = f"{settings.AVATARIYA_BASE_URL}/{self.uuid}/"
+            
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=2,
+            )
+            qr.add_data(link)
+            qr.make(fit=True)
+            
+            code_img = qr.make_image(fill_color="black", back_color="white")
+            
+            canvas_size = 450
+            canvas = Image.new('RGB', (canvas_size, canvas_size), 'white')
+            
+            qr_size = code_img.size[0]
+            position = ((canvas_size - qr_size) // 2, (canvas_size - qr_size) // 2)
+            
+            canvas.paste(code_img, position)
+            
             buffer = BytesIO()
             canvas.save(buffer, 'PNG')
             file_name = f'qr-{self.number}.png'

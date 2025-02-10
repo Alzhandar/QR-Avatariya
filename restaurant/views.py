@@ -9,6 +9,7 @@ import uuid
 from django.views.generic import DetailView
 from django.shortcuts import get_object_or_404, render
 import os
+from django.http import Http404
 
 class SectionViewSet(viewsets.ModelViewSet):
     queryset = Section.objects.all()
@@ -102,5 +103,61 @@ class MenuChoiceView(DetailView):
         context.update({
             'menu_ru': os.getenv('MENU_RU_URL'),
             'menu_kz': os.getenv('MENU_KZ_URL')
+        })
+        return context
+    
+
+def csrf_failure(request, reason=""):
+    context = {
+        'error_message': 'Ошибка проверки CSRF токена. Пожалуйста, попробуйте снова.',
+        'status_code': 403,
+        'reason': reason
+    }
+    
+    return render(
+        request=request,
+        template_name='restaurant/404_error.html',
+        context=context,
+        status=403
+    )
+
+def handler404(request, exception=None):
+    context = {
+        'error_message': str(exception) if exception else 'Запрашиваемая страница не найдена',
+        'status_code': 404,
+    }
+    
+    return render(
+        request=request,
+        template_name='restaurant/404_error.html',
+        context=context,
+        status=404
+    )
+
+# ...existing code...
+
+from django.utils import timezone
+from django.views.generic import DetailView
+
+class PredCheckView(DetailView):
+    model = Table
+    template_name = 'restaurant/pred_check.html'
+    context_object_name = 'table'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        table = self.get_object()
+        
+        # Здесь будет ваша логика получения данных о заказе
+        # Это пример данных, замените на реальную логику
+        context.update({
+            'table': table.number,
+            'hall': table.section.name if table.section else "Основной зал",
+            'num_zakaz': "A-" + str(table.number) + "-" + timezone.now().strftime("%Y%m%d"),
+            'date': timezone.now(),
+            'total': "15000", 
+            'client': "Гость",
         })
         return context
