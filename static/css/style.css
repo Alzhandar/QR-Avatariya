@@ -132,6 +132,158 @@ body {
     overflow: hidden;
 }
 
+/* Стили для предварительного счета */
+.bill-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.bill-card {
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    animation: slideUp 0.6s ease-out;
+}
+
+.bill-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+
+.bill-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--gradient);
+    border-radius: 2px;
+}
+
+.bill-info {
+    margin-bottom: 2.5rem;
+}
+
+.bill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem;
+    margin-bottom: 0.8rem;
+    border-radius: 12px;
+    background: rgba(245, 247, 250, 0.8);
+    transition: all 0.3s ease;
+}
+
+.bill-row:hover {
+    transform: translateX(5px);
+    background: rgba(120, 12, 219, 0.05);
+}
+
+.bill-label {
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.bill-value {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.bill-total {
+    background: var(--gradient);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
+    animation: pulse 2s infinite;
+}
+
+.total-label {
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.total-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
+    }
+    50% {
+        box-shadow: 0 12px 30px rgba(120, 12, 219, 0.3);
+    }
+    100% {
+        box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
+    }
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 480px) {
+    .bill-container {
+        margin: 1rem auto;
+        padding: 0 1rem;
+    }
+
+    .bill-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .bill-title {
+        font-size: 1.6rem;
+    }
+
+    .bill-row {
+        padding: 1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .bill-label,
+    .bill-value {
+        font-size: 1rem;
+    }
+
+    .bill-total {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .total-label {
+        font-size: 1.1rem;
+    }
+
+    .total-value {
+        font-size: 1.5rem;
+    }
+}
+
+
 .ripple-effect {
     position: relative;
     overflow: hidden;
@@ -659,160 +811,4 @@ body {
 }
 
 
-
-
-
-
-
-
-/* Стили для предварительного счета */
-.bill-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-}
-
-.bill-card {
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
-    animation: slideUp 0.6s ease-out;
-}
-
-.bill-title {
-    color: var(--primary-color);
-    font-size: 2rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 2.5rem;
-    font-family: 'Poppins', sans-serif;
-    position: relative;
-}
-
-.bill-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--gradient);
-    border-radius: 2px;
-}
-
-.bill-info {
-    margin-bottom: 2.5rem;
-}
-
-.bill-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem;
-    margin-bottom: 0.8rem;
-    border-radius: 12px;
-    background: rgba(245, 247, 250, 0.8);
-    transition: all 0.3s ease;
-}
-
-.bill-row:hover {
-    transform: translateX(5px);
-    background: rgba(120, 12, 219, 0.05);
-}
-
-.bill-label {
-    color: #666;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-.bill-value {
-    color: var(--primary-color);
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.bill-total {
-    background: var(--gradient);
-    color: white;
-    padding: 1.5rem 2rem;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-    box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
-    animation: pulse 2s infinite;
-}
-
-.total-label {
-    font-size: 1.3rem;
-    font-weight: 500;
-}
-
-.total-value {
-    font-size: 1.8rem;
-    font-weight: 600;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
-    }
-    50% {
-        box-shadow: 0 12px 30px rgba(120, 12, 219, 0.3);
-    }
-    100% {
-        box-shadow: 0 8px 20px rgba(120, 12, 219, 0.2);
-    }
-}
-
-/* Медиа-запросы для адаптивности */
-@media (max-width: 480px) {
-    .bill-container {
-        margin: 1rem auto;
-        padding: 0 1rem;
-    }
-
-    .bill-card {
-        padding: 2rem 1.5rem;
-    }
-
-    .bill-title {
-        font-size: 1.6rem;
-    }
-
-    .bill-row {
-        padding: 1rem;
-        margin-bottom: 0.6rem;
-    }
-
-    .bill-label,
-    .bill-value {
-        font-size: 1rem;
-    }
-
-    .bill-total {
-        padding: 1.2rem 1.5rem;
-    }
-
-    .total-label {
-        font-size: 1.1rem;
-    }
-
-    .total-value {
-        font-size: 1.5rem;
-    }
-}
 
