@@ -52,10 +52,11 @@ body {
 
 .header {
     text-align: center;
-    padding: 20px 0;
+    padding: 1rem 0;
     background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
     backdrop-filter: blur(5px);
+    margin-bottom: 1rem; 
 }
 
 .logo {
@@ -374,7 +375,7 @@ body {
 
 @media (max-width: 480px) {
     .logo {
-        width: 90px;
+        width: 100px;
     }
 
     .brand-name {
@@ -413,7 +414,7 @@ body {
     flex-direction: column;
 }
 
-/* Шапка */
+
 .header {
     padding: 1.5rem 0;
     background: var(--white);
@@ -812,3 +813,101 @@ body {
 
 
 
+/* Удалите второй блок :root и повторяющиеся стили для body и .main-wrapper */
+
+/* Обновите стили для header и logo */
+.header {
+    text-align: center;
+    padding: 1.5rem 0;
+    background: transparent; /* Изменено с white на transparent */
+    box-shadow: none; /* Удален box-shadow */
+    margin-bottom: 2rem;
+}
+
+.logo {
+    width: 160px; /* Увеличен размер */
+    height: auto;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.logo.pulse {
+    animation: logoPulse 2s infinite;
+}
+
+@keyframes logoPulse {
+    0% {
+        transform: scale(1) rotate(0);
+    }
+    50% {
+        transform: scale(1.05) rotate(2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+    }
+}
+
+.logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Обновите медиа-запрос для logo */
+@media (max-width: 480px) {
+    .logo {
+        width: 120px; /* Изменен размер для мобильных */
+    }
+    
+    .header {
+        padding: 1rem 0;
+    }
+}
+.header {
+    text-align: center;
+    padding: 1rem 0; /* Уменьшен padding */
+    background: transparent;
+    box-shadow: none;
+    margin-bottom: 1rem; /* Уменьшен margin */
+}
+
+.logo {
+    width: 160px;
+    height: auto;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    margin-bottom: 0.5rem; /* Добавлен отступ снизу */
+}
+
+.welcome-message {
+    text-align: center;
+    padding: 1rem 0; /* Уменьшен padding */
+}
+
+.welcome-message h2 {
+    margin-top: 0; /* Убран отступ сверху */
+    margin-bottom: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+/* Медиа-запрос для мобильных устройств */
+@media (max-width: 480px) {
+    .header {
+        padding: 0.5rem 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo {
+        width: 120px;
+        margin-bottom: 0.3rem;
+    }
+
+    .welcome-message {
+        padding: 0.5rem 0;
+    }
+
+    .welcome-message h2 {
+        font-size: 1.5rem;
+    }
+}
