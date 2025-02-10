@@ -151,7 +151,7 @@ class Error404View(View):
 
 class PredCheckView(DetailView):
     model = Table
-    template_name = 'restaurant/pred_check.html'
+    template_name = 'restaurant/check.html'
     context_object_name = 'table'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
