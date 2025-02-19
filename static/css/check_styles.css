@@ -1,13 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
-  --primary-color: #780cdb;
+  /* Основная цветовая схема */
+  --primary: #780cdb;
   --primary-light: #9b4de3;
   --primary-dark: #5a09a3;
+  --secondary: #4a5568;
   --white: #ffffff;
-  --gray-light: #f5f5f5;
-  --gray: #e0e0e0;
-  --gradient: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+  
+  /* Градиенты и фоны */
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --hover-bg: rgba(120, 12, 219, 0.05);
+  
+  /* Цвета текста */
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --text-white: #ffffff;
+
+  /* Тени и эффекты */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(31, 38, 135, 0.15);
+  --shadow-hover: 0 12px 40px rgba(120, 12, 219, 0.2);
+  --blur: blur(10px);
+  
+  /* Анимации */
+  --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Границы */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
 }
 
 /* Базовые стили */
