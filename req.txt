@@ -14,3 +14,6 @@ django-cors-headers
 psycopg2-binary==2.9.9
 django-storages==1.14.2
 boto3==1.34.69
+requests
+django-redis==5.4.0
+redis==5.0.1

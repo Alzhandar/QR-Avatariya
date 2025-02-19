@@ -63,12 +63,7 @@ class Table(models.Model):
         null=True,
         blank=True
     )
-    iiko_guid = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='IIKO GUID'
-    )
+
     qr = models.ImageField(
         upload_to='qr_codes/',
         verbose_name='QR-код',
@@ -92,6 +87,26 @@ class Table(models.Model):
         null=True,
         blank=True,
         verbose_name='Время запроса счёта'
+    )
+
+    organization_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='GUID организации iiko'
+    )
+
+    iiko_waiter_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='ID официанта в iiko'
+    )
+    iiko_department_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='ID подразделения в iiko'
     )
 
     class Meta:

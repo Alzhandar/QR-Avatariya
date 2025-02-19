@@ -2,36 +2,131 @@
 {% load static %}
 
 {% block content %}
-<div class="header animate__animated animate__fadeIn">
-    <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse animate__animated animate__pulse">
-</div>
-<div class="bill-container animate__animated animate__fadeInUp">
-    <div class="bill-card glass-effect">
-        <h2 class="bill-title">Ваш текущий счет</h2>
-        
-        <div class="bill-info">
-            <div class="bill-row">
-                <span class="bill-label">Номер стола:</span>
-                <span class="bill-value">{{ table }}</span>
-            </div>
-            <div class="bill-row">
-                <span class="bill-label">Зал:</span>
-                <span class="bill-value">{{ hall }}</span>
-            </div>
-            <div class="bill-row">
-                <span class="bill-label">Номер заказа:</span>
-                <span class="bill-value">{{ num_zakaz }}</span>
-            </div>
-            <div class="bill-row">
-                <span class="bill-label">Дата:</span>
-                <span class="bill-value">{{ date|date:"H:i d.m.Y" }}</span>
-            </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="/static/css/check_styles.css">
+
+
+<div class="page-wrapper">
+    <header class="header animate__animated animate__fadeIn">
+        <div class="header-content">
+            <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse animate__animated animate__pulse">
         </div>
-        
-        <div class="bill-total">
-            <span class="total-label">Итого к оплате:</span>
-            <span class="total-value">{{ total }} ₸</span>
-        </div>
-    </div>
+    </header>
+
+    <main class="bill-container animate__animated animate__fadeInUp">
+        {% if error %}
+=            <div class="error-message bill-card glass-effect">
+                <h2 class="bill-title">Ошибка</h2>
+                <div class="bill-info">
+                    <div class="error-text">{{ error }}</div>
+                    {% if error_details %}
+                        <div class="error-details">{{ error_details }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            {% if order_found %}
+                <div class="bill-card glass-effect">
+                    <h2 class="bill-title">Предварительный счёт</h2>
+                        <div class="bill-info">
+                        <div class="bill-row">
+                            <span class="bill-label">Заказ №:</span>
+                            <span class="bill-value">{{ order_info.number }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Дата:</span>
+                            <span class="bill-value">{{ order_info.created }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Стол:</span>
+                            <span class="bill-value">{{ table.number }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Зал:</span>
+                            <span class="bill-value">{{ table.section.name }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Гость:</span>
+                            <span class="bill-value">{{ customer.name }}</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Кол-во гостей:</span>
+                            <span class="bill-value">{{ customer.guests_count }}</span>
+                        </div>
+                        {% if customer.phone %}
+                            <div class="bill-row">
+                                <span class="bill-label">Телефон:</span>
+                                <span class="bill-value">{{ customer.phone }}</span>
+                            </div>
+                        {% endif %}
+                        <div class="bill-row">
+                            <span class="bill-label">Официант:</span>
+                            <span class="bill-value">{{ waiter.name }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bill-items">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Наименование</th>
+                                    <th>Кол-во</th>
+                                    <th>Цена</th>
+                                    <th>Сумма</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in items %}
+                                <tr>
+                                    <td data-label="Наименование">{{ item.name }}</td>
+                                    <td data-label="Количество">{{ item.amount }}</td>
+                                    <td data-label="Цена">{{ item.price|floatformat:2 }} ₸</td>
+                                    <td data-label="Сумма">{{ item.result_sum|floatformat:2 }} ₸</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            {% if total_sum %}
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td colspan="3">Итого:</td>
+                                    <td>{{ total_sum|floatformat:2 }} ₸</td>
+                                </tr>
+                            </tfoot>
+                            {% endif %}
+                        </table>
+                    </div>
+
+                    {% if additional_info %}
+                    <div class="additional-info">
+                        <p>{{ additional_info }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="no-order-message bill-card glass-effect">
+                    <h2 class="bill-title">Информация</h2>
+                    <div class="bill-info">
+                        <p class="message-text">{{ message }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </main>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tables = document.querySelectorAll('.items-table');
+        tables.forEach(table => {
+            const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+            table.querySelectorAll('tbody tr').forEach(row => {
+                row.querySelectorAll('td').forEach((td, index) => {
+                    td.setAttribute('data-label', headers[index]);
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -6,7 +6,11 @@ COPY req.txt .
 
 RUN pip install --no-cache-dir -r req.txt
 
+RUN mkdir -p /usr/src/app/static
+
 COPY . .
+
+RUN chmod -R 755 /usr/src/app/static
 
 EXPOSE 7654
 

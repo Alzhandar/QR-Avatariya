@@ -204,3 +204,32 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
+
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = int(os.getenv('REDIS_PORT'))
+REDIS_USER = os.getenv('REDIS_USER')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+REDIS_DB = int(os.getenv('REDIS_DB'))
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 5,
+            "RETRY_ON_TIMEOUT": True,
+            "CONNECTION_POOL_CLASS": "redis.connection.BlockingConnectionPool",
+            "CONNECTION_POOL_CLASS_KWARGS": {
+                "max_connections": 50,
+                "timeout": 20,
+            }
+        }
+    }
+}
+
+IIKO_API_LOGIN = os.getenv('IIKO_API_LOGIN')
+IIKO_API_TIMEOUT = int(os.getenv('IIKO_API_TIMEOUT', 30))
+IIKO_TOKEN_CACHE_KEY = 'iiko_token'
+IIKO_TOKEN_CACHE_TIMEOUT = 3600  

@@ -6,15 +6,41 @@ services:
              python manage.py runserver 0.0.0.0:7654"
     volumes:
       - .:/usr/src/app
-      - static_volume:/usr/src/app/static
+      - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/media
     ports:
       - '7654:7654'
     env_file:
       - .env
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+    depends_on:
+      - redis
+    networks:
+      - app_network
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
-  postgres_data:
   static_volume:
   media_volume:
+  redis_data:

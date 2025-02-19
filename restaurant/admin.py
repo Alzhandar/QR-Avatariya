@@ -61,7 +61,6 @@ class SectionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('restaurant')
 
-
 @admin.register(Table)
 class TableAdmin(admin.ModelAdmin):
     list_display = [
@@ -71,25 +70,47 @@ class TableAdmin(admin.ModelAdmin):
         'download_qr',
         'status_display',
         'call_time',
-        'bill_time'
+        'bill_time',
+        'organization_id',
+        'iiko_waiter_id',
+        'iiko_department_id',
     ]
+    
     list_filter = [
         'section__restaurant',
         'section',
         'call_waiter',
         'bill_waiter'
     ]
+    
     search_fields = [
         'number',
         'section__name',
-        'section__restaurant__name'
+        'section__restaurant__name',
+        'organization_id',
+        'iiko_waiter_id',
+        'iiko_department_id'
     ]
+    
     readonly_fields = ['qr_preview', 'download_qr']
     autocomplete_fields = ['section']
 
     fieldsets = (
         ('Основная информация', {
-            'fields': ('uuid', 'number', 'section', 'iiko_guid')
+            'fields': (
+                'uuid',
+                'number',
+                'section',
+            )
+        }),
+        ('Интеграция с iiko', {
+            'fields': (
+                'organization_id',
+                'iiko_waiter_id',
+                'iiko_department_id'
+            ),
+            'classes': ('collapse',),
+            'description': 'Идентификаторы с системой iiko'
         }),
         ('QR код', {
             'fields': ('qr_preview', 'download_qr'),
@@ -121,7 +142,21 @@ class TableAdmin(admin.ModelAdmin):
 
     def qr_preview(self, obj):
         if obj.qr:
-            return format_html('<img src="{}" width="100" height="100"/>', obj.qr.url)
+            return format_html(
+                '<div style="text-align: center;">'
+                '<a href="http://localhost:7654/{}" target="_blank">'
+                '<img src="{}" width="100" height="100" style="cursor: pointer;"/>'
+                '</a><br>'
+                '<a href="http://localhost:7654/{}" target="_blank" '
+                'style="display: inline-block; padding: 5px 15px; margin-top: 5px; '
+                'background-color: #417690; color: white; text-decoration: none; '
+                'border-radius: 4px; font-size: 12px;">'
+                'Перейти</a>'
+                '</div>',
+                obj.uuid,
+                obj.qr.url,
+                obj.uuid
+            )
         return "QR код отсутствует"
     qr_preview.short_description = 'QR код'
 
@@ -160,12 +195,9 @@ class TableAdmin(admin.ModelAdmin):
                     raise ValidationError(
                         f'Стол №{obj.number} уже существует в секции "{obj.section.name}"'
                     )
-
-            # Генерируем UUID для нового стола
             if not obj.uuid:
                 obj.uuid = uuid.uuid4()
                 
-            # Обновляем временные метки
             if obj.call_waiter and not obj.call_time:
                 obj.call_time = timezone.now()
             if obj.bill_waiter and not obj.bill_time:

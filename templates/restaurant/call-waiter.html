@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="{% static 'css/call_waiter_styles.css' %}">
+
+
+<div class="page-wrapper">
+    <header class="header animate__animated animate__fadeIn">
+        <div class="header-content">
+            <img src="{% static 'img/logo.png' %}" alt="Логотип" class="logo pulse">
+        </div>
+    </header>
+
+    <main class="call-waiter-container animate__animated animate__fadeInUp">
+        <div class="call-card glass-effect">
+            <h2 class="call-title">Вызов официанта</h2>
+            
+            {% if waiter %}
+            <div class="waiter-info">
+                <div class="waiter-details">
+                    <h3>Ваш официант</h3>
+                    <p class="waiter-name">{{ waiter.name }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <form id="callWaiterForm" class="call-form">
+                <div class="form-group">
+                    <label for="comment">Комментарий к вызову (необязательно)</label>
+                    <textarea id="comment" name="comment" 
+                              placeholder="Например: принесите дополнительные приборы"
+                              maxlength="200"></textarea>
+                </div>
+
+                <input type="hidden" id="tableUuid" value="{{ table.uuid }}">
+                
+                <button type="submit" class="call-button ripple-effect">
+                    <span class="button-icon">🔔</span>
+                    <span class="button-text">Вызвать официанта</span>
+                </button>
+            </form>
+
+            <div id="callStatus" class="call-status" style="display: none;">
+                <div class="status-icon">
+                    <div class="loading-spinner"></div>
+                </div>
+                <p class="status-message"></p>
+                <p class="estimated-time"></p>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('callWaiterForm');
+        const statusDiv = document.getElementById('callStatus');
+        const statusMessage = document.querySelector('.status-message');
+        const estimatedTime = document.querySelector('.estimated-time');
+    
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const tableUuid = document.getElementById('tableUuid').value;
+            const comment = document.getElementById('comment').value;
+            
+            form.style.display = 'none';
+            statusDiv.style.display = 'block';
+            statusMessage.textContent = 'Отправка запроса...';
+    
+            try {
+                const response = await fetch(`/api/call-waiter/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        table_uuid: tableUuid,
+                        comment: comment
+                    })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    statusMessage.textContent = data.message;
+                    if (data.estimated_time) {
+                        estimatedTime.textContent = 
+                            `Примерное время ожидания: ${data.estimated_time} мин.`;
+                    }
+                    statusDiv.classList.add('success');
+    
+                    setTimeout(() => {
+                        form.style.display = 'block';
+                        statusDiv.style.display = 'none';
+                        statusDiv.classList.remove('success');
+                        form.reset();
+                    }, 5000);
+                } else {
+                    throw new Error(data.error || 'Произошла ошибка при вызове официанта');
+                }
+            } catch (error) {
+                statusMessage.textContent = error.message;
+                statusDiv.classList.add('error');
+                
+                const retryButton = document.createElement('button');
+                retryButton.textContent = 'Попробовать снова';
+                retryButton.className = 'retry-button';
+                retryButton.onclick = () => {
+                    form.style.display = 'block';
+                    statusDiv.style.display = 'none';
+                    statusDiv.classList.remove('error');
+                    statusDiv.removeChild(retryButton);
+                };
+                statusDiv.appendChild(retryButton);
+            }
+        });
+    
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+    </script>
+{% endblock %}
