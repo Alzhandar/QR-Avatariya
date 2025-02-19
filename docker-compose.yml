@@ -11,7 +11,7 @@ services:
     ports:
       - '7654:7654'
     env_file:
-      - .env
+      - .env  
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379

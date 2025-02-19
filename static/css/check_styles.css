@@ -1,36 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
-  /* Основные цвета */
+  /* Основная цветовая схема */
   --primary: #780cdb;
   --primary-light: #9b4de3;
   --primary-dark: #5a09a3;
   --secondary: #4a5568;
+  --white: #ffffff;
   
-  /* Фоны и градиенты */
-  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  /* Градиенты и фоны */
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   --card-bg: rgba(255, 255, 255, 0.95);
   --hover-bg: rgba(120, 12, 219, 0.05);
   
-  /* Текст */
+  /* Цвета текста */
   --text-primary: #2d3748;
   --text-secondary: #718096;
   --text-white: #ffffff;
-  
-  /* Эффекты */
+
+  /* Тени и эффекты */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 32px rgba(31, 38, 135, 0.15);
+  --shadow-hover: 0 12px 40px rgba(120, 12, 219, 0.2);
   --blur: blur(10px);
   
   /* Анимации */
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Границы */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
 }
 
 /* Базовые стили */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-gradient);
+  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gradient-bg);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -42,13 +51,18 @@ body {
   padding: 1.5rem 0;
   text-align: center;
   margin-bottom: 2rem;
+  background: transparent;
 }
 
 .logo {
   width: 160px;
   height: auto;
-  transition: var(--transition);
+  transition: var(--transition-smooth);
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.logo:hover {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .logo.pulse {
@@ -66,15 +80,18 @@ body {
 .bill-card {
   background: var(--card-bg);
   backdrop-filter: var(--blur);
-  border-radius: 24px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: clamp(1.5rem, 5vw, 3rem);
   margin-bottom: 2rem;
   animation: fadeInUp 0.6s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: var(--transition-fast);
 }
 
-.glass-effect {
-  border: 1px solid rgba(255, 255, 255, 0.18);
+.bill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
 }
 
 /* Заголовок счета */
@@ -85,6 +102,7 @@ body {
   text-align: center;
   margin-bottom: 2.5rem;
   position: relative;
+  font-family: 'Poppins', sans-serif;
 }
 
 .bill-title::after {
@@ -95,7 +113,7 @@ body {
   transform: translateX(-50%);
   width: 60px;
   height: 4px;
-  background: linear-gradient(to right, var(--primary-light), var(--primary));
+  background: var(--gradient-primary);
   border-radius: 2px;
 }
 
@@ -110,10 +128,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   background: rgba(245, 247, 250, 0.8);
-  border-radius: 12px;
-  transition: var(--transition);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
 }
 
 .bill-row:hover {
@@ -124,11 +142,13 @@ body {
 .bill-label {
   font-weight: 500;
   color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
 .bill-value {
   font-weight: 600;
   color: var(--primary);
+  font-size: 1.1rem;
 }
 
 /* Таблица позиций */
@@ -146,7 +166,7 @@ body {
 }
 
 .bill-items th {
-  background: var(--primary);
+  background: var(--gradient-primary);
   color: var(--text-white);
   font-weight: 600;
   padding: 1rem;
@@ -155,11 +175,11 @@ body {
 }
 
 .bill-items th:first-child {
-  border-top-left-radius: 12px;
+  border-top-left-radius: var(--radius-sm);
 }
 
 .bill-items th:last-child {
-  border-top-right-radius: 12px;
+  border-top-right-radius: var(--radius-sm);
 }
 
 .bill-items td {
@@ -171,6 +191,10 @@ body {
   border-bottom: none;
 }
 
+.bill-items tr {
+  transition: var(--transition-fast);
+}
+
 .bill-items tr:hover {
   background: var(--hover-bg);
 }
@@ -178,14 +202,16 @@ body {
 /* Сообщения об ошибках */
 .error-message {
   border-left: 4px solid #e53e3e;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: rgba(229, 62, 62, 0.1);
+  border-radius: var(--radius-sm);
 }
 
 .error-details {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: rgba(229, 62, 62, 0.1);
-  border-radius: 8px;
   color: #c53030;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
 }
 
 /* Анимации */
@@ -217,11 +243,16 @@ body {
   }
   
   .bill-row {
-    padding: 0.75rem 1rem;
+    padding: 1rem;
   }
   
   .logo {
     width: 120px;
+  }
+  
+  .bill-label,
+  .bill-value {
+    font-size: 1rem;
   }
 }
 
@@ -244,7 +275,7 @@ body {
     margin-bottom: 1.5rem;
     padding: 1rem;
     background: rgba(245, 247, 250, 0.8);
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
   }
   
   .bill-items td {
