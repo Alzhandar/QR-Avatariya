@@ -6,6 +6,7 @@ from .models import Restaurant, Section, Table
 from itertools import groupby
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.conf import settings
 
 class SectionInline(admin.TabularInline):
     model = Section
@@ -144,18 +145,18 @@ class TableAdmin(admin.ModelAdmin):
         if obj.qr:
             return format_html(
                 '<div style="text-align: center;">'
-                '<a href="http://localhost:7654/{}" target="_blank">'
+                '<a href="{}" target="_blank">'
                 '<img src="{}" width="100" height="100" style="cursor: pointer;"/>'
                 '</a><br>'
-                '<a href="http://localhost:7654/{}" target="_blank" '
+                '<a href="{}" target="_blank" '
                 'style="display: inline-block; padding: 5px 15px; margin-top: 5px; '
                 'background-color: #417690; color: white; text-decoration: none; '
                 'border-radius: 4px; font-size: 12px;">'
                 'Перейти</a>'
                 '</div>',
-                obj.uuid,
-                obj.qr.url,
-                obj.uuid
+                f"{settings.AVATARIYA_BASE_URL}/{obj.uuid}/", 
+                obj.qr.url,  
+                f"{settings.AVATARIYA_BASE_URL}/{obj.uuid}/"   
             )
         return "QR код отсутствует"
     qr_preview.short_description = 'QR код'
