@@ -207,44 +207,14 @@ CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
-REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = int(os.getenv('REDIS_PORT'))
-REDIS_USER = os.getenv('REDIS_USER')
-REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
-REDIS_DB = int(os.getenv('REDIS_DB'))
+# REDIS_HOST = os.getenv('REDIS_HOST')
+# REDIS_PORT = int(os.getenv('REDIS_PORT'))
+# REDIS_USER = os.getenv('REDIS_USER')
+# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+# REDIS_DB = int(os.getenv('REDIS_DB'))
 
-REDIS_SSL = True  
-REDIS_URL = f"rediss://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {
-                "ssl_cert_reqs": None,  
-                "retry_on_timeout": True,
-                "max_connections": 50,
-                "socket_timeout": 5,
-                "socket_connect_timeout": 5,
-            },
-            "REDIS_CLIENT_KWARGS": {
-                "ssl": True,
-                "ssl_cert_reqs": None,
-            }
-        }
-    }
-}
-
-DJANGO_REDIS_IGNORE_EXCEPTIONS = True
-DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
-
-# REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
-# REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
-# REDIS_DB = int(os.getenv('REDIS_DB', 0))
-
-# REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+# REDIS_SSL = True  
+# REDIS_URL = f"rediss://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 # CACHES = {
 #     "default": {
@@ -253,10 +223,15 @@ DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
 #         "OPTIONS": {
 #             "CLIENT_CLASS": "django_redis.client.DefaultClient",
 #             "CONNECTION_POOL_KWARGS": {
+#                 "ssl_cert_reqs": None,  
 #                 "retry_on_timeout": True,
 #                 "max_connections": 50,
 #                 "socket_timeout": 5,
 #                 "socket_connect_timeout": 5,
+#             },
+#             "REDIS_CLIENT_KWARGS": {
+#                 "ssl": True,
+#                 "ssl_cert_reqs": None,
 #             }
 #         }
 #     }
@@ -264,6 +239,31 @@ DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
 
 # DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 # DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+REDIS_DB = int(os.getenv('REDIS_DB', 0))
+
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "retry_on_timeout": True,
+                "max_connections": 50,
+                "socket_timeout": 5,
+                "socket_connect_timeout": 5,
+            }
+        }
+    }
+}
+
+DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
 
 IIKO_API_LOGIN = os.getenv('IIKO_API_LOGIN')
 IIKO_API_TIMEOUT = int(os.getenv('IIKO_API_TIMEOUT', 30))

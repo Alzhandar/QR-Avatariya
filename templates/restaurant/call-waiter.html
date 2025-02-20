@@ -17,9 +17,9 @@
             <h2 class="call-title">Вызов официанта</h2>
             
             <div class="table-info">
-                <p>Стол №{{ table.number }}</p>
+                <p >Стол №{{ table.number }}</p>
                 {% if table.section %}
-                    <p>{{ table.section.name }}</p>
+                    <p >{{ table.section.name }}</p>
                 {% endif %}
             </div>
 
@@ -42,7 +42,7 @@
                             </p>
                             {% if waiter.id %}
                                 <p class="order-number">Заказ №{{ order_number }}</p>
-                                <!-- <p class="waiter-id">ID: {{ waiter.id }}</p> -->
+                                <p class="waiter-id">ID: {{ waiter.id }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -54,6 +54,18 @@
                     </div>
                 {% endif %}
             </div>
+
+            {% if success_message %}
+                <div class="alert alert-success animate__animated animate__fadeIn">
+                    {{ success_message }}
+                </div>
+            {% endif %}
+            
+            {% if error_message %}
+                <div class="alert alert-error animate__animated animate__fadeIn">
+                    {{ error_message }}
+                </div>
+            {% endif %}
 
             <form method="post" class="call-form">
                 {% csrf_token %}
