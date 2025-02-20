@@ -261,6 +261,47 @@ class CallWaiterView(DetailView):
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        table = self.get_object()
+        iiko_service = IikoService()
+
+        try:
+            order_data = iiko_service.get_token_and_order_by_table(
+                organization_id=str(table.organization_id),
+                table_uuid=str(table.uuid)
+            )
+            
+            orders = order_data.get('orders', [])
+            active_order = next((o for o in orders if o['creationStatus'] == 'Success'), None)
+
+            if active_order:
+                order = active_order.get('order', {})
+                waiter = order.get('waiter', {})
+                context.update({
+                    'has_active_order': True,
+                    'waiter': {
+                        'name': waiter.get('name'),
+                        'id': waiter.get('id')
+                    },
+                    'order_number': order.get('number')
+                })
+                logger.info(f"Информация об официанте: {waiter}")
+            else:
+                context.update({
+                    'has_active_order': False
+                })
+                logger.info("У стола нет активного заказа")
+
+        except Exception as e:
+            logger.error(f"Ошибка при получении данных: {e}")
+            context.update({
+                'has_active_order': False,
+                # 'error_message': "Ошибка при получении данных об официанте"
+            })
+
+        return context
+    
     def post(self, request, *args, **kwargs):
         table = self.get_object()
         iiko_service = IikoService()
@@ -270,27 +311,41 @@ class CallWaiterView(DetailView):
             if not table.organization_id:
                 raise ValueError("У этого стола не указаны данные об организации")
 
+            logger.info(f"Запрос данных для стола №{table.number}")
+            
             order_data = iiko_service.get_token_and_order_by_table(
                 organization_id=str(table.organization_id),
                 table_uuid=str(table.uuid)
             )
+            
             orders = order_data.get('orders', [])
             active_order = next((o for o in orders if o['creationStatus'] == 'Success'), None)
 
-            if not active_order:
+            if active_order:
+                logger.info(f"Статус стола №{table.number}: Есть активный заказ")
+                order = active_order.get('order', {})
+                waiter = order.get('waiter', {})
+                logger.info(f"Информация о заказе:")
+                logger.info(f"- Номер заказа: {order.get('number')}")
+                logger.info(f"- Официант: {waiter.get('name', 'Не назначен')}")
+                logger.info(f"- ID официанта: {waiter.get('id', 'Не указан')}")
+                
+                iiko_waiter_service.call_waiter(
+                    department_id=str(table.section_id),
+                    table_number=str(table.number),
+                    user_id=waiter.get('id')
+                )
+                success_message = "Вызов официанта выполнен успешно."
+            else:
+                logger.info(f"Статус стола №{table.number}: Нет активного заказа")
                 new_order_id = str(uuid.uuid4())
+                logger.info(f"Создаем новый заказ с ID: {new_order_id}")
+                
                 iiko_waiter_service.broadcast_new_order(
                     order_id=new_order_id,
                     table_number=str(table.number)
                 )
                 success_message = "Выполнен broadcast на создание нового заказа. Официант уведомлён."
-            else:
-                iiko_waiter_service.call_waiter(
-                    department_id=str(table.section_id),
-                    table_number=str(table.number),
-                    user_id=None
-                )
-                success_message = "Вызов официанта выполнен успешно."
 
             return render(request, self.template_name, {
                 'table': table,
@@ -303,4 +358,3 @@ class CallWaiterView(DetailView):
                 'table': table,
                 'error_message': error_message
             })
-

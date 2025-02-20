@@ -240,9 +240,57 @@ CACHES = {
 DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
 
+# REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+# REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+# REDIS_DB = int(os.getenv('REDIS_DB', 0))
+
+# REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": REDIS_URL,
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "CONNECTION_POOL_KWARGS": {
+#                 "retry_on_timeout": True,
+#                 "max_connections": 50,
+#                 "socket_timeout": 5,
+#                 "socket_connect_timeout": 5,
+#             }
+#         }
+#     }
+# }
+
+# DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+# DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
+
 IIKO_API_LOGIN = os.getenv('IIKO_API_LOGIN')
 IIKO_API_TIMEOUT = int(os.getenv('IIKO_API_TIMEOUT', 30))
 IIKO_TOKEN_CACHE_KEY = 'iiko_token'
 IIKO_TOKEN_CACHE_TIMEOUT = 3600  
 
 IIKO_DEFAULT_WAITER_ID = os.getenv('IIKO_DEFAULT_WAITER_ID')
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'restaurant': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

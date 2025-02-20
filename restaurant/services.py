@@ -181,7 +181,7 @@ class IikoWaiterService:
         self._session.headers.update({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': f'Bearer {self.api_key}'
+            'Authorization': self.api_key  
         })
 
     def _make_request(self, endpoint: str, payload: dict) -> Dict[str, Any]:
@@ -189,24 +189,37 @@ class IikoWaiterService:
             url = f"{self.base_url}/notifications/mobile/{endpoint}"
             response = self._session.post(url, json=payload, timeout=10)
             response.raise_for_status()
-            return response.json()
+            
+            if response.text:
+                return response.json()
+            return {"status": "success"}  
+            
         except requests.exceptions.RequestException as e:
             logger.error(f"Ошибка при вызове {endpoint}: {str(e)}")
             if hasattr(e, 'response') and e.response is not None:
                 logger.error(f"Ответ сервера: {e.response.text}")
             raise Exception(f"Ошибка при вызове {endpoint}")
-
+        
     def call_waiter(self, 
-                   department_id: str,
-                   table_number: str,
-                   user_id: Optional[str] = None,
-                   comment: Optional[str] = None) -> Dict[str, Any]:
+                department_id: str,
+                table_number: str,
+                user_id: Optional[str] = None,
+                comment: Optional[str] = None) -> Dict[str, Any]:
+        try:
+            department_id = int(department_id)
+        except (TypeError, ValueError):
+            raise ValueError(f"Некорректный department_id: {department_id}")
+            
         payload = {
-            "departmentId": department_id,
-            "table": table_number,
-            "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID,
-            "comment": comment
+            "notification": {
+                "departmentId": department_id,
+                "table": str(table_number),
+                "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID,
+                "comment": comment or ""
+            }
         }
+        
+        logger.info(f"Отправка запроса вызова официанта: {payload}")
         return self._make_request("waiter-call", payload)
 
     def request_cash_payment(self, 
@@ -261,7 +274,9 @@ class IikoWaiterService:
                           order_id: str,
                           table_number: str) -> Dict[str, Any]:
         payload = {
-            "orderId": order_id,
-            "table": table_number,
+            "notification": {
+                "orderId": order_id,
+                "table": table_number
+            }
         }
         return self._make_request("new-order-broadcast", payload)
