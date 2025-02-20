@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'css/call_waiter_styles.css' %}">
 
-
 <div class="page-wrapper">
     <header class="header animate__animated animate__fadeIn">
         <div class="header-content">
@@ -16,7 +15,7 @@
     <main class="call-waiter-container animate__animated animate__fadeInUp">
         <div class="call-card glass-effect">
             <h2 class="call-title">Вызов официанта</h2>
-            
+
             {% if waiter %}
             <div class="waiter-info">
                 <div class="waiter-details">
@@ -26,7 +25,15 @@
             </div>
             {% endif %}
 
-            <form id="callWaiterForm" class="call-form">
+            {% if success_message %}
+                <p style="color: green;">{{ success_message }}</p>
+            {% endif %}
+            {% if error_message %}
+                <p style="color: red;">{{ error_message }}</p>
+            {% endif %}
+
+            <form method="post" class="call-form">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="comment">Комментарий к вызову (необязательно)</label>
                     <textarea id="comment" name="comment" 
@@ -34,112 +41,19 @@
                               maxlength="200"></textarea>
                 </div>
 
-                <input type="hidden" id="tableUuid" value="{{ table.uuid }}">
-                
+                <input type="hidden" name="table_uuid" value="{{ table.uuid }}">
+
                 <button type="submit" class="call-button ripple-effect">
-                <span class="button-icon">
-                    <svg class="waiter-icon" viewBox="0 0 238 238" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M197.047 59.153C185.153 23.771 153.764 0 118.938 0 82.628 0 50.816 25.12 39.779 62.506c-2.614 8.849-3.94 18.078-3.94 27.434 0 49.588 37.278 89.931 83.1 89.931 45.827 0 83.11-40.343 83.11-89.931 0-10.588-1.684-20.949-5.002-30.787zm-78.109 100.717c-34.793 0-63.1-31.371-63.1-69.931 0-6.583.827-13.078 2.453-19.346h71.861l9.571-20.909 10.073 20.909h29.791c1.626 6.253 2.461 12.736 2.461 19.346 0 38.56-28.312 69.931-63.11 69.931z"/>
-                        <path d="M64.61 180.791v57.097l54-16.035 54 16.035v-57.097l-54 16.038z"/>
-                    </svg>
-                </span>
+                    <span class="button-icon">
+                        <svg class="waiter-icon" viewBox="0 0 238 238" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M197.047 59.153C185.153 23.771 153.764 0 118.938 0 82.628 0 50.816 25.12 39.779 62.506c-2.614 8.849-3.94 18.078-3.94 27.434 0 49.588 37.278 89.931 83.1 89.931 45.827 0 83.11-40.343 83.11-89.931 0-10.588-1.684-20.949-5.002-30.787zm-78.109 100.717c-34.793 0-63.1-31.371-63.1-69.931 0-6.583.827-13.078 2.453-19.346h71.861l9.571-20.909 10.073 20.909h29.791c1.626 6.253 2.461 12.736 2.461 19.346 0 38.56-28.312 69.931-63.11 69.931z"/>
+                            <path d="M64.61 180.791v57.097l54-16.035 54 16.035v-57.097l-54 16.038z"/>
+                        </svg>
+                    </span>
                     <span class="button-text">Вызвать официанта</span>
                 </button>
             </form>
-
-            <div id="callStatus" class="call-status" style="display: none;">
-                <div class="status-icon">
-                    <div class="loading-spinner"></div>
-                </div>
-                <p class="status-message"></p>
-                <p class="estimated-time"></p>
-            </div>
         </div>
     </main>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('callWaiterForm');
-        const statusDiv = document.getElementById('callStatus');
-        const statusMessage = document.querySelector('.status-message');
-        const estimatedTime = document.querySelector('.estimated-time');
-    
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const tableUuid = document.getElementById('tableUuid').value;
-            const comment = document.getElementById('comment').value;
-            
-            form.style.display = 'none';
-            statusDiv.style.display = 'block';
-            statusMessage.textContent = 'Отправка запроса...';
-    
-            try {
-                const response = await fetch(`/api/call-waiter/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        table_uuid: tableUuid,
-                        comment: comment
-                    })
-                });
-    
-                const data = await response.json();
-    
-                if (response.ok) {
-                    statusMessage.textContent = data.message;
-                    if (data.estimated_time) {
-                        estimatedTime.textContent = 
-                            `Примерное время ожидания: ${data.estimated_time} мин.`;
-                    }
-                    statusDiv.classList.add('success');
-    
-                    setTimeout(() => {
-                        form.style.display = 'block';
-                        statusDiv.style.display = 'none';
-                        statusDiv.classList.remove('success');
-                        form.reset();
-                    }, 5000);
-                } else {
-                    throw new Error(data.error || 'Произошла ошибка при вызове официанта');
-                }
-            } catch (error) {
-                statusMessage.textContent = error.message;
-                statusDiv.classList.add('error');
-                
-                const retryButton = document.createElement('button');
-                retryButton.textContent = 'Попробовать снова';
-                retryButton.className = 'retry-button';
-                retryButton.onclick = () => {
-                    form.style.display = 'block';
-                    statusDiv.style.display = 'none';
-                    statusDiv.classList.remove('error');
-                    statusDiv.removeChild(retryButton);
-                };
-                statusDiv.appendChild(retryButton);
-            }
-        });
-    
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    });
-    </script>
 {% endblock %}

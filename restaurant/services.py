@@ -1,9 +1,10 @@
 import logging
 import requests
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from django.conf import settings
 from django.core.cache import cache  
+
 
 logger = logging.getLogger(__name__)
 
@@ -131,18 +132,15 @@ class IikoService:
             raise ValueError("organization_id и table_uuid обязательны")
 
         try:
-            # Получаем токен
             token = self.ensure_token_in_redis()
             headers = {"Authorization": f"Bearer {token}"}
             
-            # Формируем URL и payload
             url = f"{self.base_url}/employees/info"
             payload = {
                 "organizationId": organization_id,
                 "tableId": table_uuid
             }
 
-            # Отправляем запрос
             response = self._session.post(
                 url,
                 json=payload,
@@ -150,9 +148,7 @@ class IikoService:
                 timeout=getattr(settings, 'IIKO_API_TIMEOUT', 15)
             )
 
-            # Проверяем ответ
             if response.status_code == 401:
-                # Если токен устарел, получаем новый и повторяем запрос
                 token = self._get_new_token()
                 headers["Authorization"] = f"Bearer {token}"
                 response = self._session.post(url, json=payload, headers=headers)
@@ -160,7 +156,6 @@ class IikoService:
 
             data = response.json()
             
-            # Формируем информацию об официанте
             return {
                 'name': data.get('name', 'Неизвестный официант'),
                 'photo': data.get('photoUrl'),
@@ -173,3 +168,100 @@ class IikoService:
             if hasattr(e, 'response') and e.response is not None:
                 logger.error(f"Ответ сервера: {e.response.text}")
             raise Exception("Не удалось получить информацию об официанте")
+        
+
+
+logger = logging.getLogger(__name__)
+
+class IikoWaiterService:
+    def __init__(self):
+        self.base_url = settings.IIKO_WAITER_API_URL
+        self.api_key = settings.IIKO_WAITER_API_KEY
+        self._session = requests.Session()
+        self._session.headers.update({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {self.api_key}'
+        })
+
+    def _make_request(self, endpoint: str, payload: dict) -> Dict[str, Any]:
+        try:
+            url = f"{self.base_url}/notifications/mobile/{endpoint}"
+            response = self._session.post(url, json=payload, timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Ошибка при вызове {endpoint}: {str(e)}")
+            if hasattr(e, 'response') and e.response is not None:
+                logger.error(f"Ответ сервера: {e.response.text}")
+            raise Exception(f"Ошибка при вызове {endpoint}")
+
+    def call_waiter(self, 
+                   department_id: str,
+                   table_number: str,
+                   user_id: Optional[str] = None,
+                   comment: Optional[str] = None) -> Dict[str, Any]:
+        payload = {
+            "departmentId": department_id,
+            "table": table_number,
+            "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID,
+            "comment": comment
+        }
+        return self._make_request("waiter-call", payload)
+
+    def request_cash_payment(self, 
+                           order_id: str,
+                           table_number: str,
+                           user_id: Optional[str] = None) -> Dict[str, Any]:
+        payload = {
+            "orderId": order_id,
+            "table": table_number,
+            "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID
+        }
+        return self._make_request("waiter-call/cash-payment", payload)
+
+    def request_card_payment(self, 
+                           order_id: str,
+                           table_number: str,
+                           user_id: Optional[str] = None) -> Dict[str, Any]:
+        payload = {
+            "orderId": order_id,
+            "table": table_number,
+            "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID
+        }
+        return self._make_request("waiter-call/card-payment", payload)
+        
+
+    def notify_order_paid(self, 
+                         order_id: str,
+                         payment_type: str,
+                         amount: float) -> Dict[str, Any]:
+        payload = {
+            "orderId": order_id,
+            "paymentType": payment_type,
+            "amount": amount
+            
+        }
+        return self._make_request("order-paid", payload)
+
+    def notify_new_order(self, 
+                        order_id: str,
+                        table_number: str,
+                        items: list,
+                        user_id: Optional[str] = None) -> Dict[str, Any]:
+        payload = {
+            "orderId": order_id,
+            "table": table_number,
+            "userId": user_id or settings.IIKO_DEFAULT_WAITER_ID,
+        }
+
+        return self._make_request("new-order", payload)
+
+    def broadcast_new_order(self, 
+                          order_id: str,
+                          table_number: str) -> Dict[str, Any]:
+        payload = {
+            "orderId": order_id,
+            "table": table_number,
+        }
+        return self._make_request("new-order-broadcast", payload)

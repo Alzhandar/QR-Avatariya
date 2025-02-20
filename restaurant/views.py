@@ -21,7 +21,7 @@ from drf_yasg import openapi
 
 from .models import Table, Section
 from .serializers import *
-from .services import IikoService
+from .services import IikoService, IikoWaiterService
 
 logger = logging.getLogger(__name__)
 
@@ -261,127 +261,46 @@ class CallWaiterView(DetailView):
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def post(self, request, *args, **kwargs):
         table = self.get_object()
+        iiko_service = IikoService()
+        iiko_waiter_service = IikoWaiterService()
 
         try:
             if not table.organization_id:
-                context['error'] = "Для данного стола не настроена интеграция с iiko"
-                return context
+                raise ValueError("У этого стола не указаны данные об организации")
 
-            iiko_service = IikoService()
-            waiter_info = iiko_service.get_waiter_info(
-                organization_id=table.organization_id,
+            order_data = iiko_service.get_token_and_order_by_table(
+                organization_id=str(table.organization_id),
                 table_uuid=str(table.uuid)
             )
-            
-            context.update({
-                'waiter': waiter_info,
-                'section': table.section,
+            orders = order_data.get('orders', [])
+            active_order = next((o for o in orders if o['creationStatus'] == 'Success'), None)
+
+            if not active_order:
+                new_order_id = str(uuid.uuid4())
+                iiko_waiter_service.broadcast_new_order(
+                    order_id=new_order_id,
+                    table_number=str(table.number)
+                )
+                success_message = "Выполнен broadcast на создание нового заказа. Официант уведомлён."
+            else:
+                iiko_waiter_service.call_waiter(
+                    department_id=str(table.section_id),
+                    table_number=str(table.number),
+                    user_id=None
+                )
+                success_message = "Вызов официанта выполнен успешно."
+
+            return render(request, self.template_name, {
+                'table': table,
+                'success_message': success_message
             })
-            
         except Exception as e:
-            logger.error(f"Ошибка при получении информации об официанте: {str(e)}")
-            context['error'] = "Произошла ошибка при загрузке информации об официанте"
-        
-        return context
-
-    @swagger_auto_schema(
-        operation_description="Вызов официанта к столу",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=['table_uuid'],
-            properties={
-                'table_uuid': openapi.Schema(
-                    type=openapi.TYPE_STRING, 
-                    description='UUID стола'
-                ),
-                'comment': openapi.Schema(
-                    type=openapi.TYPE_STRING, 
-                    description='Комментарий к вызову'
-                ),
-            }
-        ),
-        responses={
-            200: openapi.Response(
-                description="Официант успешно вызван",
-                schema=openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'status': openapi.Schema(type=openapi.TYPE_STRING),
-                        'message': openapi.Schema(type=openapi.TYPE_STRING),
-                        'call_id': openapi.Schema(type=openapi.TYPE_STRING),
-                        'estimated_time': openapi.Schema(type=openapi.TYPE_INTEGER)
-                    }
-                )
-            ),
-            400: "Некорректные данные запроса",
-            404: "Стол не найден",
-            500: "Ошибка сервера при вызове официанта"
-        }
-    )
-    def post(self, request, *args, **kwargs):
-        """
-        Обработка POST-запроса на вызов официанта
-        """
-        try:
-            table_uuid = request.data.get('table_uuid')
-            comment = request.data.get('comment', '')
-
-            if not table_uuid:
-                return JsonResponse(
-                    {'error': 'Не указан UUID стола'},
-                    status=400
-                )
-
-            table = get_object_or_404(Table, uuid=table_uuid)
-
-            if not table.organization_id:
-                return JsonResponse(
-                    {'error': 'Для данного стола не настроена интеграция с iiko'},
-                    status=400
-                )
-
-            iiko_service = IikoService()
-
-            call_result = iiko_service.call_waiter(
-                organization_id=table.organization_id,
-                table_number=table.number,
-                section_id=table.section.id if table.section else None,
-                comment=comment
-            )
-
-            logger.info(
-                f"Успешный вызов официанта к столу {table.number} "
-                f"(UUID: {table_uuid}, Organization: {table.organization_id})"
-            )
-
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Официант успешно вызван',
-                'call_id': call_result.get('call_id'),
-                'estimated_time': call_result.get('estimated_time')
+            error_message = f"Ошибка при вызове официанта: {str(e)}"
+            logger.error(error_message)
+            return render(request, self.template_name, {
+                'table': table,
+                'error_message': error_message
             })
 
-        except Table.DoesNotExist:
-            logger.error(f"Попытка вызова официанта к несуществующему столу: {table_uuid}")
-            return JsonResponse(
-                {'error': 'Указанный стол не найден'},
-                status=404
-            )
-        
-        except Exception as e:
-            logger.error(
-                f"Ошибка при вызове официанта: {str(e)}, "
-                f"Table UUID: {table_uuid}, Data: {request.data}",
-                exc_info=True
-            )
-            
-            return JsonResponse(
-                {
-                    'error': 'Произошла ошибка при вызове официанта',
-                    'details': str(e)
-                },
-                status=500
-            )

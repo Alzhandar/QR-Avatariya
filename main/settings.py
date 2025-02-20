@@ -86,6 +86,8 @@ FEEDBACK = os.getenv('FEEDBACK')
 from_1c_server = os.getenv('FROM_1C_SERVER')
 from_1c_username = os.getenv('FROM_1C_USERNAME')
 from_1c_password = os.getenv('FROM_1C_PASSWORD')
+IIKO_WAITER_API_KEY = os.getenv('IIKO_WAITER_API_KEY')
+IIKO_WAITER_API_URL = os.getenv('IIKO_WAITER_API_URL')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -242,3 +244,5 @@ IIKO_API_LOGIN = os.getenv('IIKO_API_LOGIN')
 IIKO_API_TIMEOUT = int(os.getenv('IIKO_API_TIMEOUT', 30))
 IIKO_TOKEN_CACHE_KEY = 'iiko_token'
 IIKO_TOKEN_CACHE_TIMEOUT = 3600  
+
+IIKO_DEFAULT_WAITER_ID = os.getenv('IIKO_DEFAULT_WAITER_ID')

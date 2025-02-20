@@ -1,10 +1,23 @@
-{% extends 'base.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вызов официанта</title>
+</head>
+<body>
+    <h1>Вызов официанта</h1>
+    <p>Стол №: {{ table.number }}</p>
 
-<div style="padding-top: 20px">
-    <div style="padding-top: 10px">Ожидайте официанта: {{ waiter }}</div>
-    <div style="padding-top: 10px">Ваш номер стола: {{ table }}</div>
-    <div style="padding-top: 10px">Номер официанта: {{ tel }}</div>
-</div>
+    {% if success_message %}
+        <p style="color: green;">{{ success_message }}</p>
+    {% endif %}
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
 
-{% endblock %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Вызвать официанта</button>
+    </form>
+</body>
+</html>
