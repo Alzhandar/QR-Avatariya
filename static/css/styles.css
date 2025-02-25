@@ -673,9 +673,11 @@ body {
 .lang-text {
     letter-spacing: 0.5px;
 }
-
 .back-btn {
-    margin-top: 3rem;
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 1rem 2rem;
     border: none;
     background: rgba(255, 255, 255, 0.9);
@@ -689,12 +691,30 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 100;
 }
 
 .back-btn:hover {
     background: var(--primary-color);
     color: var(--white);
-    transform: translateX(-3px);
+    transform: translate(-50%, -3px);
+    box-shadow: 0 6px 20px rgba(120, 12, 219, 0.2);
+}
+
+.back-btn i {
+    font-size: 1.1rem;
+}
+
+/* Медиа-запрос для мобильных устройств */
+@media (max-width: 480px) {
+    .back-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        bottom: 1.5rem;
+    }
 }
 /* В style.css добавьте стили для модального окна */
 .modal {
